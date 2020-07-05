@@ -15,16 +15,14 @@ class BaseSchema {
    * @return {object}        - Example: 1) Success Validation: {isValid:true}
    *                                2) Failure validation: {isValid:false, errors:[]}
    */
-  validate(object = {}, schema = {}, context = {}) {
-    let { error } = Joi.validate(object, schema, {
+  validate(object = {}, schema = {}) {
+    let { error } = schema.validate(object, {
       abortEarly: false,
       convert: false,
-      ...context,
     });
     if (error) {
       let messages = [];
       _.forEach(error.details, (err) => {
-        console.log(err);
         messages.push({
           message: err.message,
           field: err.path.join("."),
