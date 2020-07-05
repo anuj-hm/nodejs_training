@@ -1,13 +1,31 @@
+const { successObject } = require("api-rsp");
+const { employees } = require("../models/sql");
+
 class EmployeeService {
-  async create(req, res) {}
+  async create(empData) {
+    const dbData = {
+      employeeNumber: empData.employeeNumber,
+      firstName: empData.firstName,
+      lastName: empData.lastName,
+      emailId: empData.emailId,
+      address: empData.address,
+      city: empData.city,
+      state: empData.state,
+      country: empData.country,
+      mobile: empData.mobile,
+      age: empData.age,
+    };
+    const result = await employees.save(dbData);
+    return successObject({ employeeId: result.employeeId });
+  }
 
-  async get(req, res) {}
+  async get(employeeId) {}
 
-  async update(req, res) {}
+  async update(employeeId, empData) {}
 
-  async delete(req, res) {}
+  async delete(employeeId) {}
 
-  async getAll(req, res) {}
+  async getAll(searchData) {}
 }
 
 module.exports = EmployeeService;

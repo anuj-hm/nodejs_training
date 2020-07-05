@@ -78,15 +78,157 @@ const tableOptions = {
 
 const employees = connection.define(TABLE_NAME, fields, tableOptions);
 
-const save = async (dbDate) => {};
+const save = async (dbData) => {
+  dbData.employeeId = uuid.v4();
+  await employees.create(dbData);
+  return { employeeId: dbData.employeeId };
+};
 
-const update = async (employeeId, dbData) => {};
+const update = async (employeeId, dbData) => {
+  const updateQuery = {};
+  const {
+    firstName,
+    lastName,
+    emailId,
+    address,
+    city,
+    state,
+    country,
+    mobile,
+    age,
+    departmentId,
+  } = dbData;
+  if (firstName) updateQuery.firstName = firstName;
+  if (lastName) updateQuery.lastName = lastName;
+  if (emailId) updateQuery.emailId = emailId;
+  if (address) updateQuery.address = address;
+  if (city) updateQuery.city = city;
+  if (state) updateQuery.state = state;
+  if (country) updateQuery.country = country;
+  if (mobile) updateQuery.mobile = mobile;
+  if (age) updateQuery.age = age;
+  if (departmentId) updateQuery.departmentId = departmentId;
 
-const remove = async (employeeId) => {};
+  return await employees.update(updateQuery, {
+    where: {
+      employeeId: employeeId,
+      isActive: true,
+    },
+  });
+};
 
-const get = async (employeeId) => {};
+const remove = async (employeeId) => {
+  return await employees.update(
+    {
+      isActive: false,
+    },
+    {
+      where: {
+        employeeId: employeeId,
+        isActive: true,
+      },
+    }
+  );
+};
 
-const getAll = async () => {};
+const get = async (employeeId) => {
+  return await employees.findOne({
+    where: {
+      employeeId: employeeId,
+      isActive: true,
+    },
+    raw: true,
+  });
+};
+
+const getSearchQuery = (queryString) => {
+  const Op = Sequelize.Op;
+  return {
+    [Op.or]: [
+      { firstName: { [Op.iLike]: "%" + queryString + "%" } },
+      { lastName: { [Op.iLike]: "%" + queryString + "%" } },
+      { emailId: { [Op.iLike]: "%" + queryString + "%" } },
+      { address: { [Op.iLike]: "%" + queryString + "%" } },
+      { city: { [Op.iLike]: "%" + queryString + "%" } },
+      { state: { [Op.iLike]: "%" + queryString + "%" } },
+      { country: { [Op.iLike]: "%" + queryString + "%" } },
+    ],
+  };
+};
+
+const getFilterQuery = (filterReq) => {
+  const Op = Sequelize.Op;
+  const query = {};
+  _.forEach(_.keys(filterReq), (field) => {
+    if (filterReq[field]) {
+      switch (field) {
+        case "firstName":
+        case "lastName":
+        case "emailId":
+        case "address":
+        case "city":
+        case "state":
+        case "country":
+          query[field] = { [Op.iLike]: "%" + filterReq[field] + "%" };
+          break;
+        case "createAt":
+        case "updateAt":
+          query[field] = Sequelize.where(
+            Sequelize.fn("text", Sequelize.col(field)),
+            "LIKE",
+            "%" + filterReq[field] + "%"
+          );
+          break;
+      }
+    }
+  });
+  return query;
+};
+
+const getAll = async ({
+  queryString,
+  sortOrder,
+  sortBy,
+  offset,
+  limit,
+  filters,
+}) => {
+  let searchQuery = {};
+  let filterQuery = {};
+
+  if (queryString) {
+    searchQuery = getSearchQuery(queryString);
+  }
+  if (filters) {
+    filterQuery = getFilterQuery(filtersReq);
+  }
+  let mappedNames = mapDBAttributeName();
+  sortBy = mappedNames.get(sortBy) || "updateAt";
+  const promises = [employees.count()];
+  promises.push(
+    employees.findAndCountAll({
+      where: {
+        ...filterQuery,
+        ...searchQuery,
+      },
+      order: [[sortBy, sortOrder]],
+      offset: offset,
+      limit: limit,
+      subQuery: false,
+    })
+  );
+  const [totalRecords, employeesResult] = await Promise.all(promises);
+  let actualOffset = parseInt(limit) + parseInt(offset);
+  const recordsFiltered = employeesResult.count;
+  const nextOffset =
+    actualOffset > recordsFiltered ? recordsFiltered : actualOffset;
+  return {
+    totalRecords,
+    recordsFiltered,
+    nextOffset,
+    employees: employeesResult,
+  };
+};
 
 module.exports = {
   save,
