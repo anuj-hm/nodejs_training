@@ -78,7 +78,10 @@ const tableOptions = {
 
 const employees = connection.define(TABLE_NAME, fields, tableOptions);
 
-const save = async (dbDate) => {};
+const save = async (dbDate) => {
+  dbDate.employeeId = uuid.v4()
+  return employees.create(dbDate);
+};
 
 const update = async (employeeId, dbData) => {};
 

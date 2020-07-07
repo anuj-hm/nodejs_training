@@ -5,6 +5,7 @@
  */
 
 const BaseSchema = require("./BaseSchema");
+let Joi = require("@hapi/joi");
 
 class EmployeeSchema extends BaseSchema {
   /**
@@ -17,7 +18,17 @@ class EmployeeSchema extends BaseSchema {
   }
 
   createSchema() {
-    return joi.object().keys({});
+    return Joi.object().keys({
+      employeeNumber: Joi.string().required().min(3).max(10),
+      firstName: Joi.string().required().min(3).max(25),
+      lastName: Joi.string().required().min(3).max(25),
+      emailId: Joi.string().required().min(3).max(50),
+      address: Joi.string().max(100),
+      city: Joi.string(),
+      state: Joi.string(),
+      country: Joi.string(),
+      mobile: Joi.string()
+    });
   }
 }
 

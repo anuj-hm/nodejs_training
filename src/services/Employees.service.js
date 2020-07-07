@@ -1,13 +1,17 @@
+const { employees } = require("../models/sql");
+
 class EmployeeService {
-  async create(req, res) {}
+  async create(reqData) {
+    return await employees.save(reqData);
+  }
 
-  async get(req, res) {}
+  async get() {}
 
-  async update(req, res) {}
+  async update() {}
 
-  async delete(req, res) {}
+  async delete() {}
 
-  async getAll(req, res) {}
+  async getAll() {}
 }
 
 module.exports = EmployeeService;
