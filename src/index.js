@@ -15,3 +15,6 @@ const initializeDbAndStartServer = async () => {
 };
 
 initializeDbAndStartServer();
+
+
+

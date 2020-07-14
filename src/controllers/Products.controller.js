@@ -1,27 +1,26 @@
-const { EmployeeSchema } = require("../validationSchema");
-const { EmployeeService } = require("../services");
 
-const empService = new EmployeeService();
+const { ProductsService } = require("../services");
+const { ProductSchema } = require("../validationSchema");
 
-class EmployeeController {
+const prodService = new ProductsService();
+
+class ProductsController {
   async create(req, res) {
     try {
       // parse the req
       const reqData = req.body;
-      // const empId = req.params.empId,
-      // const q = req.query
-      
+           
       // validate - JOI
-      const { isValid, errors } = EmployeeSchema.validate(
+      const { isValid, errors } = ProductSchema.validate(
         reqData,
-        EmployeeSchema.createSchema()
+        ProductSchema.createSchema()
       );
       if (!isValid) {
         return res.status(400).send({ errors });
       }
 
       //service
-      const result = await empService.create(reqData);
+      const result = await prodService.create(reqData);
 
       return res.status(200).send({ success: true });
 
@@ -35,7 +34,7 @@ class EmployeeController {
   async get(req, res) {
     try {
       //service
-      const result = await empService.get(req, res);
+      const result = await prodService.get(req, res);
       return result;
     } catch (err) {
       console.log(err);
@@ -46,7 +45,7 @@ class EmployeeController {
   async getAll(req, res) {
     try {
       //service
-      const result = await empService.getAll(req, res);
+      const result = await prodService.getAll(req, res);
       return result;
     } catch (err) {
       console.log(err);
@@ -57,16 +56,16 @@ class EmployeeController {
   async update(req, res) {
     try {
       // validate - JOI
-      const { isValid, errors } = EmployeeSchema.validate(
+      const { isValid, errors } = ProductSchema.validate(
         req.body,
-        EmployeeSchema.createSchema()
+        ProductSchema.createSchema()
       );
       if (!isValid) {
         return res.status(400).send({ errors });
       }
 
       //service
-      const result = await empService.update(req, res);
+      const result = await prodService.update(req, res);
       return result;
 
       // back the response
@@ -79,13 +78,14 @@ class EmployeeController {
   async delete(req, res) {
     try {
       //service
-      const result = await empService.delete(req, res);
+      const result = await prodService.delete(req, res);
       return result;
     } catch (err) {
       console.log(err);
       return res.send(500).send({ success: false });
     }
   }
+
 }
 
-module.exports = EmployeeController;
+module.exports = ProductsController;
