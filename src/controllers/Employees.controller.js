@@ -27,7 +27,6 @@ class EmployeeController {
 
       // back the response
     } catch (err) {
-      console.log(err);
       return res.send(500).send({ success: false });
     }
   }
@@ -60,7 +59,7 @@ class EmployeeController {
       if(result) {
         return res.status(200).send({
           data:result,
-          message: `Employees data was retrieved successfully!`
+          message: "Employees data was retrieved successfully!"
         });
       } else {
         return res.send({
@@ -88,7 +87,7 @@ class EmployeeController {
       const empId = req.params.id;
       const empBody = req.body;
       const result = await empService.update(empId, empBody);
-      if (result == 1) {
+      if (result === 1) {
         return res.status(200).send({ 
           success: true ,
           message: "Employee was updated successfully."
@@ -101,7 +100,7 @@ class EmployeeController {
     } catch (err) {
       return res.send(500).send({ 
         success: false,
-        message: "Error updating Employee with id=" + empId + "======" + err
+        message: `Error updating Employee with id= ${empId} err`
       });
     }
   }

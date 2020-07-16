@@ -28,7 +28,6 @@ class ProductsController {
 
       // back the response
     } catch (err) {
-      console.log(err);
       // return res.send(500).send({ success: false });
       apiRsp.sendErrorRsp(res);
     }
@@ -61,7 +60,7 @@ class ProductsController {
       if(result) {
         return res.status(200).send({
           data:result,
-          message: `Products data was retrieved successfully!`
+          message: "Products data was retrieved successfully!"
         });
       } else {
         return res.send({
@@ -89,7 +88,7 @@ class ProductsController {
       const prodId = req.params.id;
       const prodBody = req.body;
       const result = await prodService.update(prodId, prodBody);
-      if (result == 1) {
+      if (result === 1) {
         return res.status(200).send({ 
           success: true ,
           message: "Product was updated successfully."
@@ -102,7 +101,7 @@ class ProductsController {
     } catch (err) {
       return res.send(500).send({ 
         success: false,
-        message: "Error updating Product with id=" + prodId + "======" + err
+        message: `Error updating Product with id= ${prodId} err`
       });
     }
   }

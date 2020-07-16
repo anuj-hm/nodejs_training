@@ -79,7 +79,7 @@ const tableOptions = {
 const employees = connection.define(TABLE_NAME, fields, tableOptions);
 
 const save = async (dbData) => {
-  dbData.employeeId = uuid.v4()
+  dbData.employeeId = uuid.v4();
   return employees.create(dbData);
 };
 
@@ -87,13 +87,13 @@ const update = async (empId, empBody) => {
   return await employees.update(empBody, {
     where: {
       employeeId: empId
-    }})
+    }});
 };
 
 const remove = async (empId) => {
   return await employees.destroy({
     where: { employeeId: empId }
-  })
+  });
 };
 
 const get = async (empId) => {
@@ -101,7 +101,7 @@ const get = async (empId) => {
 };
 
 const getAll = async () => {
-  return await employees.findAll({ where: '' });
+  return await employees.findAll({ where: "" });
 };
 
 module.exports = {
