@@ -35,79 +35,75 @@ const save = async (dbData) => {
   return products.create(dbData);
 };
 
-const update = async (req, res) => {
-  const id = req.params.id;
-  products.update(req.body, {
+const update = async (prodId, prodBody) => {
+  return await products.update(prodBody, {
     where: {
-      productId: id
+      productId: prodId
     }})
-    .then(num => {
-      if (num == 1) {
-        return res.status(200).send({ 
-          success: true ,
-          message: "Product was updated successfully."
-        });
-      } else {
-        return res.send({
-          message: `Cannot update Product with id=${id}. Maybe product was not found or req.body is empty!`
-        });
-      }
-    })
-    .catch(err => {
-      return res.status(500).send({
-        message: "Error updating Product with id=" + id + "======" + err
-      });
-    })
+    // .then(num => {
+    //   if (num == 1) {
+    //     return res.status(200).send({ 
+    //       success: true ,
+    //       message: "Product was updated successfully."
+    //     });
+    //   } else {
+    //     return res.send({
+    //       message: `Cannot update Product with id=${id}. Maybe product was not found or req.body is empty!`
+    //     });
+    //   }
+    // })
+    // .catch(err => {
+    //   return res.status(500).send({
+    //     message: "Error updating Product with id=" + id + "======" + err
+    //   });
+    // })
 };
 
-const remove = async (req, res) => {
-  const id = req.params.id;
-    
-  products.destroy({
-    where: { productId: id }
+const remove = async (prodId) => {
+  return await products.destroy({
+    where: { productId: prodId }
   })
-  .then(num => {
-    if (num == 1) {
-      return res.status(200).send({
-          message: "Product was deleted successfully!"
-        });
-    } else {
-      return res.send({
-        message: `Cannot delete Product with name=${id}. Maybe Product was not found!`
-      });
-    }
-  })
-  .catch(err => {
-    return res.status(500).send({
-      message: "Could not delete Product with name=" + id + "======" + err
-    });
-  });
+  // .then(num => {
+  //   if (num == 1) {
+  //     return res.status(200).send({
+  //         message: "Product was deleted successfully!"
+  //       });
+  //   } else {
+  //     return res.send({
+  //       message: `Cannot delete Product with name=${id}. Maybe Product was not found!`
+  //     });
+  //   }
+  // })
+  // .catch(err => {
+  //   return res.status(500).send({
+  //     message: "Could not delete Product with name=" + id + "======" + err
+  //   });
+  // });
 };
 
-const get = async (req, res) => {
-  const id = req.params.id;
-  products.findByPk(id)
-    .then(data => {
-      return res.send(data);
-    })
-    .catch(err => {
-      return res.status(500).send({
-        message: "Error retrieving product with id=" + id
-      });
-    });
+const get = async (prodId) => {
+  return await products.findByPk(prodId);
+    // .then(data => {
+    //   return res.send(data);
+    // })
+    // .catch(err => {
+    //   return res.status(500).send({
+    //     message: "Error retrieving product with id=" + id
+    //   });
+    // });
 };
 
 const getAll = async (req, res) => {
-  products.findAll({ where: '' })
-    .then(data => {
-      return res.send(data);
-    })
-    .catch(err => {
-      return res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving products."
-      });
-    });
+  return await products.findAll({ where: '' });
+    // .then(data => {
+    //   return res.send(data);
+    // })
+    // .catch(err => {
+    //   return res.status(500).send({
+    //     message:
+    //       err.message || "Some error occurred while retrieving products."
+    //   });
+    // });
 };
 
 module.exports = {

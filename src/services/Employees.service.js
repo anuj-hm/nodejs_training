@@ -5,20 +5,20 @@ class EmployeeService {
     return await employees.save(reqData);
   }
 
-  async get(req, res) {
-    return await employees.get(req, res);
+  async get(empId) {
+    return await employees.get(empId);
   }
 
-  async getAll(req, res) {
-    return await employees.getAll(req, res);
+  async getAll() {
+    return await employees.getAll();
   }
 
-  async update(req ,res) {
-    return await employees.update(req, res);
+  async update(empId, empBody) {
+    return await employees.update(empId, empBody);
   }
 
-  async delete(req, res) {
-    return await employees.remove(req, res);
+  async delete(empId) {
+    return await employees.remove(empId);
   }
 
 }

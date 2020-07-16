@@ -33,21 +33,40 @@ class EmployeeController {
   }
 
   async get(req, res) {
+    const empId = req.params.id;
     try {
       //service
-      const result = await empService.get(req, res);
-      return result;
+      const result = await empService.get(empId);
+      if(result) {
+        return res.status(200).send({
+          data: result,
+          message: `Employee was retrieved successfully! ${empId}`
+        });
+      } else {
+        return res.send({
+          message: `Error retrieving Employee with id= ${empId} ${result}`
+        });
+      }
     } catch (err) {
-      console.log(err);
-      return res.send(500).send({ success: false });
+      return res.status(500).send({ success: false , message : err});
     }
   }
+
   
   async getAll(req, res) {
     try {
       //service
-      const result = await empService.getAll(req, res);
-      return result;
+      const result = await empService.getAll();
+      if(result) {
+        return res.status(200).send({
+          data:result,
+          message: `Employees data was retrieved successfully!`
+        });
+      } else {
+        return res.send({
+          message: `Error retrieving Employees ${result}`
+        });
+      }
     } catch (err) {
       console.log(err);
       return res.send(500).send({ success: false });
@@ -66,24 +85,43 @@ class EmployeeController {
       }
 
       //service
-      const result = await empService.update(req, res);
-      return result;
-
-      // back the response
+      const empId = req.params.id;
+      const empBody = req.body;
+      const result = await empService.update(empId, empBody);
+      if (result == 1) {
+        return res.status(200).send({ 
+          success: true ,
+          message: "Employee was updated successfully."
+        });
+      } else {
+        return res.send({
+          message: `Cannot update Employee with id=${empId}. Maybe Employee was not found or req.body is empty!`
+        });
+      }
     } catch (err) {
-      console.log(err);
-      return res.send(500).send({ success: false });
+      return res.send(500).send({ 
+        success: false,
+        message: "Error updating Employee with id=" + empId + "======" + err
+      });
     }
   }
 
   async delete(req, res) {
+    const empId = req.params.id;
     try {
       //service
-      const result = await empService.delete(req, res);
-      return result;
+      const result = await empService.delete(empId);
+      if(result == 1) {
+        return res.status(200).send({
+          message: `Employee was deleted successfully! ${empId}`
+        });
+      } else {
+        return res.send({
+          message: `Cannot delete Employee with name=${empId}. Maybe Employee was not found! ${result}`
+        });
+      }
     } catch (err) {
-      console.log(err);
-      return res.send(500).send({ success: false });
+      return res.status(500).send({ success: false , message : err});
     }
   }
 }

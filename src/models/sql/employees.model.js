@@ -83,79 +83,25 @@ const save = async (dbData) => {
   return employees.create(dbData);
 };
 
-const update = async (req, res) => {
-  const id = req.params.id;
-  employees.update(req.body, {
+const update = async (empId, empBody) => {
+  return await employees.update(empBody, {
     where: {
-      employeeId: id
+      employeeId: empId
     }})
-    .then(num => {
-      if (num == 1) {
-        return res.status(200).send({ 
-          success: true ,
-          message: "Employee was updated successfully."
-        });
-      } else {
-        return res.send({
-          message: `Cannot update Employee with id=${id}. Maybe Employee was not found or req.body is empty!`
-        });
-      }
-    })
-    .catch(err => {
-      return res.status(500).send({
-        message: "Error updating Employee with id=" + id + "======" + err
-      });
-    })
 };
 
-const remove = async (req, res) => {
-  const id = req.params.id;
-    
-  employees.destroy({
-    where: { employeeId: id }
+const remove = async (empId) => {
+  return await employees.destroy({
+    where: { employeeId: empId }
   })
-  .then(num => {
-    if (num == 1) {
-      return res.status(200).send({
-          message: "Employee was deleted successfully!"
-        });
-    } else {
-      return res.send({
-        message: `Cannot delete Employee with name=${id}. Maybe Employee was not found!`
-      });
-    }
-  })
-  .catch(err => {
-    return res.status(500).send({
-      message: "Could not delete Employee with name=" + id + "======" + err
-    });
-  });
 };
 
-const get = async (req, res) => {
-  const id = req.params.id;
-  employees.findByPk(id)
-    .then(data => {
-      return res.send(data);
-    })
-    .catch(err => {
-      return res.status(500).send({
-        message: "Error retrieving Employee with id=" + id + "===== " + err
-      });
-    });
+const get = async (empId) => {
+  return await employees.findByPk(empId);
 };
 
-const getAll = async (req, res) => {
-  employees.findAll({ where: '' })
-    .then(data => {
-      return res.send(data);
-    })
-    .catch(err => {
-      return res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving employees."
-      });
-    });
+const getAll = async () => {
+  return await employees.findAll({ where: '' });
 };
 
 module.exports = {

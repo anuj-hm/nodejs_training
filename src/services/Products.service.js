@@ -5,20 +5,20 @@ class ProductService {
     return await products.save(reqData);
   }
 
-  async get(req, res) {
-    return await products.get(req, res);
+  async get(prodId) {
+    return await products.get(prodId);
   }
 
-  async getAll(req, res) {
-    return await products.getAll(req, res);
+  async getAll() {
+    return await products.getAll();
   }
 
-  async update(req ,res) {
-    return await products.update(req, res);
+  async update(prodId, prodBody) {
+    return await products.update(prodId, prodBody);
   }
 
-  async delete(req, res) {
-    return await products.remove(req, res);
+  async delete(prodId) {
+    return await products.remove(prodId);
   }
 
 }
