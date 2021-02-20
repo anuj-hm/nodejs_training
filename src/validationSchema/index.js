@@ -1,3 +1,5 @@
 module.exports = {
-  EmployeeSchema: require("./EmployeeSchema"),
+    EmployeeSchema: require("./employee.schema"),
+    ProductSchema: require("./Product.schema")
 };
+  
